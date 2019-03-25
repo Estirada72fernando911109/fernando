@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cronómetro</title>
+<style type="text/css">
+
+ 
+	#sup {
+	text-align: center;
+	height: 127px;
+	position: absolute;
+	left: 8px;
+	top: 8px;
+	width: 300px;
+	right: auto;
+	}
+	#izq {
+	text-align: center;
+	height: 18px;
+	position: absolute;
+	left: 8px;
+	top: 136px;
+	width: 90px;
+	}
+	#der {
+	text-align: center;
+	height: 18px;
+	position: absolute;
+	left: 214px;
+	top: 136px;
+	width: 94px;
+	}
+	#inf {
+	text-align: center;
+	height: 255px;
+	position: absolute;
+	left: 8px;
+	top: 155px;
+	width: 300px;
+	}
+		
+	body {
+	text-align: center;
+	min-width: 300px;
+	max-width: 300px;
+	min-height: 400px;
+	max-height: 400px;
+    }
+	#caja {
+	background-image: url(fondo.jpg);
+	min-width: 300px;
+	min-height: 400px;
+	max-height: 400px;
+	max-width: 300px;
+	width: auto;
+	bottom: auto;
+	margin-bottom: 0px;
+    }
+    #crono {
+	color: #000;
+	font-size: 24px;
+	text-align: center;
+	height: 25px;
+	position: absolute;
+	font-weight: bold;
+	left: 103px;
+	top: 100px;
+	width: 107px;
+	font-family: Arial, Helvetica, sans-serif;
+    }
+
+	#cuentas {
+	text-align: center;
+	position: absolute;
+	width: 300px;
+	top: 220px;
+	right: auto;
+	height: 189px;
+    }
+    #lista {
+	color: blue;
+	text-align: center;
+	font-weight: bold;
+    }
+    #cambiar {
+	background-color: green;
+	color: white;
+	width: 50px;
+	height: 18px;
+	font-size: 10px;
+	border-radius: 3px;
+	position: absolute;
+	left: 104px;
+	top: 136px;
+	
+
+    }
+    #inicializar {
+	background-color: red;
+	color: white;
+	width: 50px;
+	height: 18px;
+	border-radius: 3px;
+	font-size: 10px;
+	position: absolute;
+	left: 156px;
+	top: 136px;
+
+    }
+
+</style>
+
+<script type="text/javascript" src="zepto.min.js"> </script><style type="text/css"></style>
+<script type="text/javascript" src="touch.js"> </script>
+<script type="text/javascript">
+$(function(){
+    localStorage.c = (localStorage.c || "0.00");
+    localStorage.n = (localStorage.n || "");
+
+    var t, cl = $("#crono"); 
+    var list = $("#lista"); // // asignacion de variable a la lista de paradas
+	var touch1 = $("#sup"); 
+	var touch2 = $("#izq"); 
+	var touch3 = $("#der"); 
+	var touch4 = $("#inf"); 
+    list.html(localStorage.n);  // presentacion de los valores de localStorage si los tiene
+    
+    function incr()     { localStorage.c = +localStorage.c + 0.01; }  //con 0.01 modifico para incrementar centesimas
+    function mostrar()  { cl.html((+localStorage.c).toFixed(2)); }; // con el parametro (2) fijo dos decimales en le contador
+    function arrancar() { t=setInterval(function(){incr(); mostrar()}, 10);}; //con el 10 fuerzo a que se realicen los incrementos cada 10 milisegundos
+    function parar()    { clearInterval(t);  t=undefined; interrumpir()}; 
+    function cambiar()  { if (!t) arrancar(); else parar(); };
+    function interrumpir (){ // funcion para limpiar la lista y ponerla a 0.00
+                              if (localStorage.c === "0.00" && localStorage.n === "") list.html(""); 
+                              else list.html(localStorage.n + (+localStorage.c).toFixed(2) + "<br>");  
+                        localStorage.n = list.html();  
+                           }
+    $("#cambiar").on('click', cambiar); //evento sobre el boton cambiar
+    $("#inicializar").on('click', function(){ if (!t) {localStorage.c ="0.00"; localStorage.n =""; mostrar(); interrumpir();}}); //evento sobre el boton inicializar
+
+    
+	touch1.on('tap', cambiar);
+	touch2.on('tap', cambiar);
+	touch3.on('tap', cambiar);
+	touch4.on('tap', cambiar);
+
+    touch1.on('swipe', function(){ if (!t) {localStorage.c="0.00"; localStorage.n=""; mostrar(); interrumpir();}});
+	touch2.on('swipe', function(){ if (!t) {localStorage.c="0.00"; localStorage.n=""; mostrar(); interrumpir();}});
+	touch3.on('swipe', function(){ if (!t) {localStorage.c="0.00"; localStorage.n=""; mostrar(); interrumpir();}});
+	touch4.on('swipe', function(){ if (!t) {localStorage.c="0.00"; localStorage.n=""; mostrar(); interrumpir();}});
+	mostrar();
+  });
+  </script>
+</head>
+
+<body>
+<div id="caja">
+<div id="sup"></div>
+<div id="crono">8.56</div>
+<div id="izq"></div>
+<button type="button" id="cambiar">ON/OFF</button>
+<button type="button" id="inicializar">RESET</button>
+<div id="der"></div>
+
+<div id="cuentas">
+<h3>Tiempos parciales</h3>
+<div id="lista">3.48<br>4.84<br>6.29<br>8.56<br></div>
+
+</div>
+<div id="inf"></div>
+</div>
+
+</body></html>
